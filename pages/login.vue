@@ -10,6 +10,8 @@
     <button @click="login">login</button>
     <button @click="singup">signup</button>
     <button @click="logout">logout</button>
+    <a href="/api/user/login/twitter/" >twitterでlogin</a>
+    <a href="/api/user/login/github/" >githubでlogin</a>
   </div>
 </template>
 
