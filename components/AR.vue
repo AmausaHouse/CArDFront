@@ -2,7 +2,8 @@
   <section class="container">
     <link 
       rel="stylesheet" 
-      href="/css/main.css">
+      href="/css/main.css"
+    >
     <div>
       <video 
         id="videoWebcam" 
@@ -10,9 +11,11 @@
         preload 
         autoplay 
         loop 
-        muted/>
+        muted
+      />
 
-      <canvas id="canvasDetection"/>   
+      <canvas id="canvasDetection" />   
+      <canvas id="takecanvas" style="display:none" />   
     </div>
   </section>
 </template>
@@ -38,7 +41,12 @@ export default {
       { src: '/js/tracking-lbf-landmarks-smoother.js' }
     ]
   },
-  mounted() {
+  data: function() {
+    return {
+      canvas: {}
+    }
+  },
+  mounted: function() {
     //////////////////////////////////////////////////////////////////////////////////
     //		Init
     //////////////////////////////////////////////////////////////////////////////////
@@ -124,14 +132,16 @@ export default {
       var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
       lastTimeMsec = nowMsec
       // call each update function
-      onRenderFcts.forEach(function(onRenderFct) {
-        onRenderFct(deltaMsec / 1000, nowMsec / 1000)
-      })
     })
     var canvasDetection = document.querySelector('#canvasDetection')
     canvasDetection.width = 320
     canvasDetection.height = 240
     var context = canvasDetection.getContext('2d')
+
+    this.canvas = document.querySelector('#takecanvas')
+    this.canvas.width = 320
+    this.canvas.height = 240
+    var takecontext = this.canvas.getContext('2d')
 
     // tracking.LBF.maxNumStages = 10
     var tracker = new tracking.LandmarksTracker()
@@ -144,6 +154,11 @@ export default {
     // FOR VIDEO SOURCE
     // tracking.track(videoElement, tracker)
     // FOR WEBCAM SOURCE
+    setInterval(() => {
+      console.log('start shotting')
+      takecontext.drawImage(videoElement, 0, 0, 320, 240)
+      this.uploadfile()
+    }, 10000)
     tracking.track(videoElement, tracker, { camera: true })
     //////////////////////////////////////////////////////////////////////////////
     //                Code Separator
@@ -152,6 +167,7 @@ export default {
       boundinBoxVisible: true
     }
 
+    /*
     var gui = new dat.GUI()
     gui
       .add(tracker, 'edgesDensity', 0.1, 0.5)
@@ -180,6 +196,7 @@ export default {
         .listen()
         .name(featureLabel)
     })
+    */
     //////////////////////////////////////////////////////////////////////////////
     //                Code Separator
     //////////////////////////////////////////////////////////////////////////////
@@ -208,6 +225,11 @@ export default {
         // camera.lookAt(scene.position)
       })
     })
+  },
+  methods: {
+    uploadfile: function() {
+      console.log(this.canvas.toDataURL('image/jpeg'))
+    }
   }
 }
 </script>
