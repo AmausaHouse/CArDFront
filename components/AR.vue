@@ -43,6 +43,7 @@ export default {
     //		Init
     //////////////////////////////////////////////////////////////////////////////////
     // init renderer
+    /*
     var renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true
@@ -63,6 +64,7 @@ export default {
     //		Initialize a basic camera
     //////////////////////////////////////////////////////////////////////////////////
     // Create a camera
+    /*
     var camera = new THREE.PerspectiveCamera(
       60,
       window.innerWidth / window.innerHeight,
@@ -80,11 +82,13 @@ export default {
       },
       false
     )
+    */
 
     //////////////////////////////////////////////////////////////////////////////////
     //		add an object in the scene
     //////////////////////////////////////////////////////////////////////////////////
     // add a torus knot
+    /*
     var geometry = new THREE.CubeGeometry(1, 1, 1)
     var material = new THREE.MeshNormalMaterial({
       transparent: true,
@@ -102,13 +106,14 @@ export default {
     onRenderFcts.push(function(delta) {
       mesh.rotation.x += Math.PI * delta
     })
+    */
     //////////////////////////////////////////////////////////////////////////////////
     //		render the whole thing on the page
     //////////////////////////////////////////////////////////////////////////////////
     // render the scene
-    onRenderFcts.push(function() {
-      renderer.render(scene, camera)
-    })
+    // onRenderFcts.push(function() {
+    //  renderer.render(scene, camera)
+    // })
     // run the rendering loop
     var lastTimeMsec = null
     requestAnimationFrame(function animate(nowMsec) {
@@ -192,15 +197,15 @@ export default {
         landmarkSmoother.update(faceLandmarks)
 
         // display each faceLandmarks
-        faceDebug.displayLandmarksDot(landmarkSmoother.lerpedLandmarks)
+        // faceDebug.displayLandmarksDot(landmarkSmoother.lerpedLandmarks)
 
         var topNose = landmarkSmoother.lerpedLandmarks[15]
         var positionX = (topNose[0] / canvasDetection.width - 0.5) * 2
         var positionY = (topNose[1] / canvasDetection.height - 0.5) * 2
         // console.log('topNose', topNose[0]/canvasDetection.width)
-        camera.position.x = -positionX * 2
-        camera.position.y = -positionY * 2
-        camera.lookAt(scene.position)
+        // camera.position.x = -positionX * 2
+        // camera.position.y = -positionY * 2
+        // camera.lookAt(scene.position)
       })
     })
   }
