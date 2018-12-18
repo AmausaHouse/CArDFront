@@ -17,9 +17,18 @@
       <canvas id="canvasDetection" />   
       <canvas id="takecanvas" style="display:none" />   
     </div>
+    <div
+      class="bg-light"
+      style="z-index: 100"
+    >
+      <p>{{ name }}</p>
+    </div>
   </section>
 </template>
 <script>
+import axios from 'axios'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
   head: {
     script: [
@@ -43,7 +52,8 @@ export default {
   },
   data: function() {
     return {
-      canvas: {}
+      canvas: {},
+      name: 'hello'
     }
   },
   mounted: function() {
@@ -228,7 +238,16 @@ export default {
   },
   methods: {
     uploadfile: function() {
-      console.log(this.canvas.toDataURL('image/jpeg'))
+      console.log('sending file')
+      let img = this.canvas.toDataURL('image/jpeg')
+      console.log(img)
+      axios
+        .post('http://localhost:8080/api/face/', { file: img })
+        .then(resposen => {
+          console.log(resposen.data[0].name)
+          this.name = resposen.data[0].name
+          console.log(this.name)
+        })
     }
   }
 }
