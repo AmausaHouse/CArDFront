@@ -79,6 +79,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    /*
     vendor: ['~assets/three.js/build/three.min.js'],
     vendor: ['~assets/three.js/examples/js/libs/dat.gui.min.js'],
     vendor: ['~assets/vendor/tracking.js/build/tracking.js'],
@@ -92,6 +93,7 @@ module.exports = {
     vendor: ['~assets/js/tracking-lbf-debug.js'],
     vendor: ['~assets/tracking-lbf-landmark-features.js'],
     vendor: ['~assets/tracking-lbf-landmarks-smoother.js'],
+    */
     /*
     ** You can extend webpack config here
     */
