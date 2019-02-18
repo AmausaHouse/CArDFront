@@ -1,18 +1,19 @@
 <template>
   <section class="container">
-    <link 
-      rel="stylesheet" 
-      href="/css/main.css">
+    <link
+      rel="stylesheet"
+      href="/css/main.css"
+    >
     <div>
-      <video 
-        id="videoWebcam" 
+      <video
+        id="videoWebcam"
         class="player"
-        preload 
-        autoplay 
-        loop 
-        muted/>
-
-      <canvas id="canvasDetection"/>   
+        preload
+        autoplay
+        loop
+        muted
+      />
+      <canvas id="canvasDetection" />
     </div>
   </section>
 </template>
