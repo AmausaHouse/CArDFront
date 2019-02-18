@@ -16,7 +16,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ],
+    ] /*
     script: [
       { src: 'https://aframe.io/releases/0.6.1/aframe.min.js' },
       {
@@ -39,7 +39,7 @@ module.exports = {
       { src: '../js/js/tracking-lbf-landmark-features.js' },
       { src: '../js/js/tracking-lbf-landmarks-smoother.js' },
       { src: '../js/hoge.js' }
-    ]
+    ]*/
   },
 
   /*
@@ -66,13 +66,23 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    ['@nuxtjs/pwa', { icon: true }]
   ],
+
   /*
   ** Axios module configuration
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+  },
+
+  workbox: {
+    dev: true
+  },
+  manifest: {
+    name: 'C-AR-D.app',
+    lang: 'ja'
   },
 
   /*

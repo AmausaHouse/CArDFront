@@ -82,3 +82,6 @@ dist
 
 # IDE
 .idea
+
+# sw.js
+sw.*
