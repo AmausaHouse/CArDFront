@@ -11,6 +11,9 @@ $ yarn install
 # serve with hot reload at localhost:3000
 $ yarn run dev
 
+# serve with hot reload at https://localhost:3000
+$ yarn run dev-ssl
+
 # build for production and launch server
 $ yarn run build
 $ yarn start
