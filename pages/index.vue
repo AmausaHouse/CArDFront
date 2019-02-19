@@ -1,7 +1,7 @@
 <template>
   <section class="container">
     <div>
-      <AR/>
+      <AR />
     </div>
   </section>
 </template>

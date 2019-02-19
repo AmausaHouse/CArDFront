@@ -16,7 +16,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ],
+    ] /*
     script: [
       { src: 'https://aframe.io/releases/0.6.1/aframe.min.js' },
       {
@@ -39,7 +39,7 @@ module.exports = {
       { src: '../js/js/tracking-lbf-landmark-features.js' },
       { src: '../js/js/tracking-lbf-landmarks-smoother.js' },
       { src: '../js/hoge.js' }
-    ]
+    ]*/
   },
 
   /*
@@ -66,8 +66,10 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    ['@nuxtjs/pwa', { icon: true }]
   ],
+
   /*
   ** Axios module configuration
   */
@@ -75,10 +77,19 @@ module.exports = {
     // See https://github.com/nuxt-community/axios-module#options
   },
 
+  workbox: {
+    dev: true
+  },
+  manifest: {
+    name: 'C-AR-D.app',
+    lang: 'ja'
+  },
+
   /*
   ** Build configuration
   */
   build: {
+    /*
     vendor: ['~assets/three.js/build/three.min.js'],
     vendor: ['~assets/three.js/examples/js/libs/dat.gui.min.js'],
     vendor: ['~assets/vendor/tracking.js/build/tracking.js'],
@@ -92,6 +103,7 @@ module.exports = {
     vendor: ['~assets/js/tracking-lbf-debug.js'],
     vendor: ['~assets/tracking-lbf-landmark-features.js'],
     vendor: ['~assets/tracking-lbf-landmarks-smoother.js'],
+    */
     /*
     ** You can extend webpack config here
     */
