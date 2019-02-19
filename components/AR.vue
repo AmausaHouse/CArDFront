@@ -1,20 +1,20 @@
 <template>
   <section class="container">
-    <link
-      rel="stylesheet"
-      href="/css/main.css"
-    >
-    <div>
-      <video
-        id="videoWebcam"
-        class="player"
-        preload
-        autoplay
-        loop
-        muted
-      />
-      <canvas id="canvasDetection" />
-    </div>
+    <video
+      id="video"
+      width="100%"
+      height="100%"
+      preload
+      autoplay
+      loop
+      muted
+    />
+    <canvas
+      id="canvas"
+      class=""
+      width="100%"
+      height="100%"
+    />
   </section>
 </template>
 <script>
@@ -22,11 +22,12 @@ export default {
   head: {
     script: [
       //three.js library
-      { src: 'three.js/build/three.min.js' },
-      { src: 'three.js/examples/js/libs/dat.gui.min.js' },
+      //{ src: 'three.js/build/three.min.js' },
+      //{ src: 'three.js/examples/js/libs/dat.gui.min.js' },
       //tracking.js library
       { src: 'vendor/tracking.js/build/tracking.js' },
-      { src: 'vendor/tracking.js/build/data/face-min.js' },
+      { src: 'vendor/tracking.js/build/data/face-min.js' }
+      /*
       {
         src: 'vendor/tracking.js/src/alignment/training/Landmarks.js'
       },
@@ -37,191 +38,38 @@ export default {
       { src: '/js/tracking-lbf-debug.js' },
       { src: '/js/tracking-lbf-landmark-features.js' },
       { src: '/js/tracking-lbf-landmarks-smoother.js' }
+      */
     ]
   },
   mounted() {
-    //////////////////////////////////////////////////////////////////////////////////
-    //		Init
-    //////////////////////////////////////////////////////////////////////////////////
-    // init renderer
-    var renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true
-    })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.domElement.style.position = 'absolute'
-    renderer.domElement.style.top = '0px'
-    renderer.domElement.style.left = '0px'
-    renderer.domElement.style.zIndex = 1
-    renderer.domElement.style.pointerEvents = 'none'
-    document.body.appendChild(renderer.domElement)
-    // array of functions for the rendering loop
-    var onRenderFcts = []
-    // init scene and camera
-    var scene = new THREE.Scene()
-
-    //////////////////////////////////////////////////////////////////////////////////
-    //		Initialize a basic camera
-    //////////////////////////////////////////////////////////////////////////////////
-    // Create a camera
-    var camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.01,
-      100
-    )
-    camera.position.z = 3
-    window.addEventListener(
-      'resize',
-      function() {
-        camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix()
-
-        renderer.setSize(window.innerWidth, window.innerHeight)
-      },
-      false
-    )
-
-    //////////////////////////////////////////////////////////////////////////////////
-    //		add an object in the scene
-    //////////////////////////////////////////////////////////////////////////////////
-    // add a torus knot
-    var geometry = new THREE.CubeGeometry(1, 1, 1)
-    var material = new THREE.MeshNormalMaterial({
-      transparent: true,
-      opacity: 0.5,
-      side: THREE.DoubleSide
-    })
-    var mesh = new THREE.Mesh(geometry, material)
-    scene.add(mesh)
-
-    var geometry = new THREE.TorusKnotGeometry(0.3, 0.1, 64, 16)
-    var material = new THREE.MeshNormalMaterial()
-    var mesh = new THREE.Mesh(geometry, material)
-    scene.add(mesh)
-
-    onRenderFcts.push(function(delta) {
-      mesh.rotation.x += Math.PI * delta
-    })
-    //////////////////////////////////////////////////////////////////////////////////
-    //		render the whole thing on the page
-    //////////////////////////////////////////////////////////////////////////////////
-    // render the scene
-    onRenderFcts.push(function() {
-      renderer.render(scene, camera)
-    })
-    // run the rendering loop
-    var lastTimeMsec = null
-    requestAnimationFrame(function animate(nowMsec) {
-      // keep looping
-      requestAnimationFrame(animate)
-      // measure time
-      lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60
-      var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
-      lastTimeMsec = nowMsec
-      // call each update function
-      onRenderFcts.forEach(function(onRenderFct) {
-        onRenderFct(deltaMsec / 1000, nowMsec / 1000)
-      })
-    })
-    var canvasDetection = document.querySelector('#canvasDetection')
-    canvasDetection.width = 320
-    canvasDetection.height = 240
-    var context = canvasDetection.getContext('2d')
-
-    // tracking.LBF.maxNumStages = 10
-    var tracker = new tracking.LandmarksTracker()
-    tracker.setEdgesDensity(0.18)
-    tracker.setInitialScale(2.4)
-    tracker.setStepSize(0.8)
-    var faceDebug = new tracking.LBF.Debug(canvasDetection)
-    var landmarkSmoother = new tracking.LBF.LandmarksSmoother(0.4)
-    var videoElement = document.querySelector('#videoWebcam')
-    // FOR VIDEO SOURCE
-    // tracking.track(videoElement, tracker)
-    // FOR WEBCAM SOURCE
-    tracking.track(videoElement, tracker, { camera: true })
-    //////////////////////////////////////////////////////////////////////////////
-    //                Code Separator
-    //////////////////////////////////////////////////////////////////////////////
-    var parameters = {
-      boundinBoxVisible: true
-    }
-
-    var gui = new dat.GUI()
-    gui
-      .add(tracker, 'edgesDensity', 0.1, 0.5)
-      .step(0.01)
-      .listen()
-    gui
-      .add(tracker, 'initialScale', 1.0, 10.0)
-      .step(0.1)
-      .listen()
-    gui
-      .add(tracker, 'stepSize', 0.5, 5)
-      .step(0.1)
-      .listen()
-
-    gui
-      .add(landmarkSmoother, 'lerpFactor', 0.0, 1)
-      .listen()
-      .name('Landmarks Lerp')
-    gui
-      .add(parameters, 'boundinBoxVisible')
-      .listen()
-      .name('bounding box')
-    Object.keys(tracking.LBF.LandmarkFeatures).forEach(function(featureLabel) {
-      gui
-        .add(faceDebug.parameters, featureLabel + 'Visible')
-        .listen()
-        .name(featureLabel)
-    })
-    //////////////////////////////////////////////////////////////////////////////
-    //                Code Separator
-    //////////////////////////////////////////////////////////////////////////////
+    var video = document.getElementById('video')
+    var canvas = document.getElementById('canvas')
+    canvas.width = document.body.clientWidth
+    canvas.height = document.body.clientHeight
+    video.width = document.body.clientWidth
+    video.height = document.body.clientHeight
+    var ctx = canvas.getContext('2d')
+    var tracker = new tracking.ObjectTracker('face')
+    tracker.setInitialScale(4)
+    tracker.setStepSize(2)
+    tracker.setEdgesDensity(0.1)
+    ctx.strokeStyle = '#a64ceb'
+    tracking.track('#video', tracker, { camera: true })
     tracker.on('track', function(event) {
-      // clear debug canvasDetection
-      context.clearRect(0, 0, canvasDetection.width, canvasDetection.height)
-      if (event.data === undefined) return
-
-      event.data.faces.forEach(function(boundingBox, faceIndex) {
-        var faceLandmarks = event.data.landmarks[faceIndex]
-        if (parameters.boundinBoxVisible === true) {
-          faceDebug.displayFaceBoundingBox(boundingBox, faceIndex)
-        }
-        // lerpFacesLandmarks
-        landmarkSmoother.update(faceLandmarks)
-
-        // display each faceLandmarks
-        faceDebug.displayLandmarksDot(landmarkSmoother.lerpedLandmarks)
-
-        var topNose = landmarkSmoother.lerpedLandmarks[15]
-        var positionX = (topNose[0] / canvasDetection.width - 0.5) * 2
-        var positionY = (topNose[1] / canvasDetection.height - 0.5) * 2
-        // console.log('topNose', topNose[0]/canvasDetection.width)
-        camera.position.x = -positionX * 2
-        camera.position.y = -positionY * 2
-        camera.lookAt(scene.position)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      event.data.forEach(function(rect) {
+        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
+        // ここでカッコいい感じの枠をhtml5-canvasで書く
       })
     })
   }
 }
 </script>
 <style scoped>
-#videoWebcam {
+video,
+canvas {
+  margin-left: 0px;
+  margin-top: 0px;
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 320px;
-  height: auto;
-  zoom: 3;
-}
-#canvasDetection {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 320px;
-  height: auto;
-  zoom: 3;
 }
 </style>
