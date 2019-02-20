@@ -25,6 +25,6 @@ jobs:
           name: lint
           command: |
             mkdir -p /tmp/test-reports/eslint
-            node_modules/.bin/eslint --ext .js,.vue --ignore-path .gitignore --ignore-path .eslintignore --format=junit --output-file /tmp/test-report/eslint/eslint.xml  .
+            node_modules/.bin/eslint --ext .js,.vue --ignore-path .gitignore --ignore-path .eslintignore --format=junit --output-file /tmp/test-reports/eslint/eslint.xml  .
       - store_test_results:
           path: /tmp/test-reports
