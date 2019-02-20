@@ -36,6 +36,9 @@ export default {
     video.width = document.body.clientWidth
     video.height = document.body.clientHeight
     var ctx = canvas.getContext('2d')
+    var img = new Image()
+    //img path
+    img.src = 'img/hoge.png'
     var tracker = new tracking.ObjectTracker('face')
     tracker.setInitialScale(4)
     tracker.setStepSize(2)
@@ -46,6 +49,13 @@ export default {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(function(rect) {
         ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
+        ctx.drawImage(
+          img,
+          rect.x,
+          rect.y - rect.height / 2,
+          rect.width / 2,
+          rect.height / 2
+        )
         // ここでカッコいい感じの枠をhtml5-canvasで書く
       })
     })
