@@ -1,4 +1,5 @@
 # CArDRabbit
+[![CircleCI](https://circleci.com/gh/AmausaHouse/CArDRabbit.svg?style=svg)](https://circleci.com/gh/AmausaHouse/CArDRabbit)
 
 > Meister project
 
