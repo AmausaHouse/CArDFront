@@ -43,12 +43,35 @@ export default {
     tracker.setInitialScale(4)
     tracker.setStepSize(2)
     tracker.setEdgesDensity(0.1)
-    ctx.strokeStyle = '#a64ceb'
+    ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
+    ctx.strokeStyle = 'blue'
     tracking.track('#video', tracker, { camera: true })
     tracker.on('track', function(event) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(function(rect) {
-        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
+        ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
+        ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
+        ctx.font = rect.x / 4
+        ctx.strokeText(
+          'name',
+          rect.x + rect.width / 2,
+          rect.y - (rect.height / 2 / 3) * 2,
+          rect.width,
+          rect.height
+        )
+        ctx.strokeText(
+          'fuga',
+          rect.x + rect.width / 2,
+          rect.y - (rect.height / 2 / 3) * 1,
+          rect.width,
+          rect.height
+        )
+        ctx.clearRect(
+          rect.x + 10,
+          rect.y + 10,
+          rect.width - 20,
+          rect.height - 20
+        )
         ctx.drawImage(
           img,
           rect.x,
@@ -56,7 +79,6 @@ export default {
           rect.width / 2,
           rect.height / 2
         )
-        // ここでカッコいい感じの枠をhtml5-canvasで書く
       })
     })
   }
