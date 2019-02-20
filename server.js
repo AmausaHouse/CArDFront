@@ -19,8 +19,6 @@ const options = {
 }
 
 // Create the server
-https
-.createServer(options, nuxt.render)
-.listen(port)
+https.createServer(options, nuxt.render).listen(port)
 
 console.log(`Server listening on https://localhost:${port}`)
