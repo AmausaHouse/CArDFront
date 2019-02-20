@@ -1,20 +1,7 @@
 <template>
   <section class="container">
-    <video
-      id="video"
-      width="100%"
-      height="100%"
-      preload
-      autoplay
-      loop
-      muted
-    />
-    <canvas
-      id="canvas"
-      class=""
-      width="100%"
-      height="100%"
-    />
+    <video id="video" width="100%" height="100%" preload autoplay loop muted />
+    <canvas id="canvas" class="" width="100%" height="100%" />
   </section>
 </template>
 <script>

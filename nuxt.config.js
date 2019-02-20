@@ -4,8 +4,8 @@ module.exports = {
   mode: 'universal',
 
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
 
   head: {
     title: pkg.name,
@@ -43,27 +43,23 @@ module.exports = {
   },
 
   /*
-  ** Customize the progress-bar color
-  */
+   ** Customize the progress-bar color
+   */
   loading: { color: '#fff' },
 
   /*
-  ** Global CSS
-  */
-  css: [
-    'element-ui/lib/theme-chalk/index.css'
-  ],
+   ** Global CSS
+   */
+  css: ['element-ui/lib/theme-chalk/index.css'],
 
   /*
-  ** Plugins to load before mounting the App
-  */
-  plugins: [
-    '@/plugins/element-ui'
-  ],
+   ** Plugins to load before mounting the App
+   */
+  plugins: ['@/plugins/element-ui'],
 
   /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
@@ -71,8 +67,8 @@ module.exports = {
   ],
 
   /*
-  ** Axios module configuration
-  */
+   ** Axios module configuration
+   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
@@ -86,8 +82,8 @@ module.exports = {
   },
 
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
     /*
     vendor: ['~assets/three.js/build/three.min.js'],
@@ -105,8 +101,8 @@ module.exports = {
     vendor: ['~assets/tracking-lbf-landmarks-smoother.js'],
     */
     /*
-    ** You can extend webpack config here
-    */
+     ** You can extend webpack config here
+     */
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
