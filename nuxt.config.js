@@ -74,7 +74,7 @@ module.exports = {
   },
 
   workbox: {
-    dev: true
+    dev: false
   },
   manifest: {
     name: 'C-AR-D.app',

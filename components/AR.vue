@@ -1,10 +1,35 @@
 <template>
   <section class="container">
-    <video id="video" width="100%" height="100%" preload autoplay loop muted />
-    <canvas id="canvas" class="" width="100%" height="100%" />
+    <video
+      id="video"
+      width="100%"
+      height="100%"
+      preload
+      autoplay
+      loop
+      muted
+      @click="uploadImage"
+    />
+    <canvas
+      id="canvas"
+      class=""
+      width="100%"
+      height="100%"
+      @click="uploadImage"
+    />
+    <canvas
+      id="tempcanvas"
+      class=""
+      width="100%"
+      height="100%"
+      style="display: none"
+    />
   </section>
 </template>
 <script>
+import axios from 'axios'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
   head: {
     script: [
@@ -28,11 +53,22 @@ export default {
       */
     ]
   },
+  data: function() {
+    return {
+      video: {},
+      videoWidth: 0,
+      videoHeight: 0,
+      faceinfo: []
+    }
+  },
   mounted() {
     var video = document.getElementById('video')
+    this.video = video
     var canvas = document.getElementById('canvas')
-    canvas.width = document.body.clientWidth
-    canvas.height = document.body.clientHeight
+    this.videoWidth = document.body.clientWidth
+    this.videoHeight = document.body.clientHeight
+    canvas.width = this.videoWidth
+    canvas.height = this.videoHeight
     video.width = document.body.clientWidth
     video.height = document.body.clientHeight
     var ctx = canvas.getContext('2d')
@@ -81,6 +117,27 @@ export default {
         )
       })
     })
+    setInterval(() => this.uploadImage(), 20000)
+  },
+  methods: {
+    uploadImage: function() {
+      console.log('fnc called')
+      var canvas = document.getElementById('tempcanvas')
+      canvas.setAttribute('width', this.videoWidth / 3)
+      canvas.setAttribute('height', this.videoHeight / 3)
+      var ctx = canvas.getContext('2d')
+      ctx.drawImage(this.video, 0, 0, this.videoWidth / 3, this.videoHeight / 3)
+      var b64Text = canvas.toDataURL()
+      console.log(b64Text)
+      axios
+        .post('http://localhost:8080/api/face/', {
+          base64img: b64Text
+        })
+        .then(r => {
+          console.log('data comming')
+          console.log(r.data)
+        })
+    }
   }
 }
 </script>
