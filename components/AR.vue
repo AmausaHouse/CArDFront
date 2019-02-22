@@ -3,24 +3,12 @@
     <video id="video" width="100%" height="100%" preload autoplay loop muted />
     <canvas id="canvas" class="" width="100%" height="100%" />
     <div class="overlay">
-      <b-button variant="primary" @click="showModal">
-        take a phototake
+      <b-button variant="primary" @click="modalShow = !modalShow">
+        take a photo
       </b-button>
     </div>
     <div>
-      <b-modal ref="myModalRef" hide-footer title="take a photo">
-        <div class="d-block text-center">
-          画像
-        </div>
-        <b-button
-          class="mt-3"
-          variant="outline-danger"
-          block
-          @click="hideModal"
-        >
-          閉じる
-        </b-button>
-      </b-modal>
+      <b-modal v-model="modalShow" hide-footer>画像</b-modal>
     </div>
   </section>
 </template>
@@ -47,6 +35,17 @@ export default {
       { src: '/js/tracking-lbf-landmarks-smoother.js' }
       */
     ]
+  },
+  data() {
+    return {
+      modalShow: false
+    }
+  },
+  watch: {
+    modalShow: function() {
+      if (this.modalShow === true) video.pause()
+      else video.play()
+    }
   },
   mounted() {
     var video = document.getElementById('video')
@@ -102,14 +101,7 @@ export default {
       })
     })
   },
-  methods: {
-    showModal() {
-      this.$refs.myModalRef.show()
-    },
-    hideModal() {
-      this.$refs.myModalRef.hide()
-    }
-  }
+  methods: {}
 }
 </script>
 <style scoped>
