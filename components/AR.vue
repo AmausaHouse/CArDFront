@@ -2,6 +2,26 @@
   <section class="container">
     <video id="video" width="100%" height="100%" preload autoplay loop muted />
     <canvas id="canvas" class="" width="100%" height="100%" />
+    <div class="overlay">
+      <b-button variant="primary" @click="showModal">
+        take a phototake
+      </b-button>
+    </div>
+    <div>
+      <b-modal ref="myModalRef" hide-footer title="take a photo">
+        <div class="d-block text-center">
+          画像
+        </div>
+        <b-button
+          class="mt-3"
+          variant="outline-danger"
+          block
+          @click="hideModal"
+        >
+          閉じる
+        </b-button>
+      </b-modal>
+    </div>
   </section>
 </template>
 <script>
@@ -81,10 +101,23 @@ export default {
         )
       })
     })
+  },
+  methods: {
+    showModal() {
+      this.$refs.myModalRef.show()
+    },
+    hideModal() {
+      this.$refs.myModalRef.hide()
+    }
   }
 }
 </script>
 <style scoped>
+.overlay {
+  position: absolute;
+  top: 90%;
+  left: 80%;
+}
 video,
 canvas {
   margin-left: 0px;
