@@ -50,7 +50,7 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: ['element-ui/lib/theme-chalk/index.css', '@/assets/scss/app.scss'],
 
   /*
    ** Plugins to load before mounting the App
@@ -63,9 +63,14 @@ module.exports = {
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
+    'bootstrap-vue/nuxt',
     ['@nuxtjs/pwa', { icon: true }]
   ],
 
+  bootstrapVue: {
+    bootstrapCSS: false, // or `css`
+    bootstrapVueCSS: false // or `bvCSS`
+  },
   /*
    ** Axios module configuration
    */
