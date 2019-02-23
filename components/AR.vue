@@ -90,37 +90,8 @@ export default {
       let info = this.faceinfo.info
       img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      event.data.forEach(function(rect) {
-        ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
-        ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
-        ctx.font = '30px'
-        ctx.strokeText(
-          name,
-          rect.x + rect.width / 2,
-          rect.y - (rect.height / 2 / 3) * 2,
-          rect.width,
-          rect.height
-        )
-        ctx.strokeText(
-          info,
-          rect.x + rect.width / 2,
-          rect.y - (rect.height / 2 / 3) * 1,
-          rect.width,
-          rect.height
-        )
-        ctx.clearRect(
-          rect.x + 10,
-          rect.y + 10,
-          rect.width - 20,
-          rect.height - 20
-        )
-        ctx.drawImage(
-          img,
-          rect.x,
-          rect.y - rect.height / 2,
-          rect.width / 2,
-          rect.height / 2
-        )
+      event.data.forEach(rect => {
+        this.drawFaceMarker(rect, name, info, this.faceinfo.icon, ctx)
       })
     })
     setInterval(() => this.uploadImage(), 5000)
@@ -145,6 +116,37 @@ export default {
             console.log(this.faceinfo)
           }
         })
+    },
+    drawFaceMarker: function(rect, name, info, imagesrc, ctx) {
+      let img = new Image()
+      img.src = imagesrc
+      ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
+      ctx.font = '30px'
+      ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
+      ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
+      ctx.strokeText(
+        name,
+        rect.x + rect.width / 2,
+        rect.y - (rect.height / 2 / 3) * 2,
+        rect.width,
+        rect.height
+      )
+      ctx.strokeText(
+        info,
+        rect.x + rect.width / 2,
+        rect.y - (rect.height / 2 / 3) * 1,
+        rect.width,
+        rect.height
+      )
+      ctx.clearRect(rect.x + 10, rect.y + 10, rect.width - 20, rect.height - 20)
+      ctx.drawImage(
+        img,
+        rect.x,
+        rect.y - rect.height / 2,
+        rect.width / 2,
+        rect.height / 2
+      )
+      ctx.strokeStyle = 'black'
     }
   }
 }
