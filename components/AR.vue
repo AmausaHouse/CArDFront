@@ -21,9 +21,19 @@
         <b-button variant="danger" @click="savePic()">保存</b-button>
       </b-modal>
     </div>
+    <canvas
+      id="tempcanvas"
+      class=""
+      width="100%"
+      height="100%"
+      style="display: none"
+    />
   </section>
 </template>
 <script>
+import axios from 'axios'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
   head: {
     script: [
@@ -52,7 +62,16 @@ export default {
       modalShow: false,
       width: 0,
       height: 0,
-      imgSrc: null
+      imgSrc: null,
+      video: {},
+      videoWidth: 0,
+      videoHeight: 0,
+      faceinfo: {
+        name: 'thsis your name',
+        icon:
+          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg',
+        info: 'this is your disctiption'
+      }
     }
   },
   watch: {
@@ -73,37 +92,41 @@ export default {
     this.width = document.body.clientWidth
     this.height = document.body.clientHeight
     var video = document.getElementById('video')
+    this.video = video
     var canvas = document.getElementById('canvas')
-    canvas.width = document.body.clientWidth
-    canvas.height = document.body.clientHeight
+    this.videoWidth = document.body.clientWidth
+    this.videoHeight = document.body.clientHeight
+    canvas.width = this.videoWidth
+    canvas.height = this.videoHeight
     video.width = document.body.clientWidth
     video.height = document.body.clientHeight
     var ctx = canvas.getContext('2d')
     var img = new Image()
-    //img path
-    img.src = 'img/hoge.png'
     var tracker = new tracking.ObjectTracker('face')
     tracker.setInitialScale(4)
     tracker.setStepSize(2)
     tracker.setEdgesDensity(0.1)
     ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
-    ctx.strokeStyle = 'blue'
+    ctx.strokeStyle = 'black'
     tracking.track('#video', tracker, { camera: true })
-    tracker.on('track', function(event) {
+    tracker.on('track', event => {
+      let name = this.faceinfo.name
+      let info = this.faceinfo.info
+      img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(function(rect) {
         ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
         ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
-        ctx.font = rect.x / 4
+        ctx.font = '30px'
         ctx.strokeText(
-          'name',
+          name,
           rect.x + rect.width / 2,
           rect.y - (rect.height / 2 / 3) * 2,
           rect.width,
           rect.height
         )
         ctx.strokeText(
-          'fuga',
+          info,
           rect.x + rect.width / 2,
           rect.y - (rect.height / 2 / 3) * 1,
           rect.width,
@@ -115,15 +138,20 @@ export default {
           rect.width - 20,
           rect.height - 20
         )
-        ctx.drawImage(
-          img,
-          rect.x,
-          rect.y - rect.height / 2,
-          rect.width / 2,
-          rect.height / 2
-        )
+        img.crossOrigin = 'anonymous'
+        img.onload = () => {
+          img.crossOrigin = 'anonymous'
+          ctx.drawImage(
+            img,
+            rect.x,
+            rect.y - rect.height / 2,
+            rect.width / 2,
+            rect.height / 2
+          )
+        }
       })
     })
+    setInterval(() => this.uploadImage(), 5000)
   },
   methods: {
     savePic() {
@@ -148,6 +176,26 @@ export default {
       link.href = window.URL.createObjectURL(blob)
       link.download = fileName
       link.click()
+    },
+    uploadImage: function() {
+      var canvas = document.getElementById('tempcanvas')
+      canvas.setAttribute('width', this.videoWidth / 3)
+      canvas.setAttribute('height', this.videoHeight / 3)
+      var ctx = canvas.getContext('2d')
+      ctx.drawImage(this.video, 0, 0, this.videoWidth / 3, this.videoHeight / 3)
+      var b64Text = canvas.toDataURL()
+      axios
+        .post('/api/face/', {
+          base64img: b64Text
+        })
+        .then(r => {
+          if (r.data.length > 0) {
+            this.faceinfo.name = r.data[0].display_name
+            this.faceinfo.icon = r.data[0].user_icon
+            this.faceinfo.info = r.data[0].user_dictionaly
+            console.log(this.faceinfo)
+          }
+        })
     }
   }
 }
