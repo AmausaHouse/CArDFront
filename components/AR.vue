@@ -3,12 +3,27 @@
     <video id="video" width="100%" height="100%" preload autoplay loop muted />
     <canvas id="canvas" class="" width="100%" height="100%" />
     <div class="overlay">
-      <b-button variant="primary" @click="modalShow = !modalShow">
-        take a photo
-      </b-button>
+      <b-card class="text-center">
+        <b-button
+          class="mr-1 ml-1"
+          variant="primary"
+          @click="modalShow = !modalShow"
+        >
+          take a photo
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary" @click="onlyImg = true">
+          アイコンのみ
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary" @click="onlyImg = false">
+          profile表示
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary" @click="profile">
+          プロフィール編集
+        </b-button>
+      </b-card>
     </div>
     <div>
-      <b-modal v-model="modalShow" hide-footer>
+      <b-modal v-model="modalShow" size="lg" hide-footer>
         <div class="d-block text-center">
           <canvas
             id="canvas2"
@@ -67,10 +82,11 @@ export default {
       videoWidth: 0,
       videoHeight: 0,
       faceinfo: {
-        name: 'thsis your name',
-        icon: '/img/hatena.png',
+        name: 'this is your name',
+        icon: 'img/hatena.png',
         info: 'this is your disctiption'
-      }
+      },
+      onlyImg: false
     }
   },
   watch: {
@@ -111,7 +127,6 @@ export default {
     tracker.on('track', event => {
       let name = this.faceinfo.name
       let info = this.faceinfo.info
-      img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       if (event.data.length > 0) {
         let maxrect = { width: 0 }
@@ -124,13 +139,31 @@ export default {
       }
       /*
       event.data.forEach(rect => {
-        this.drawFaceMarker(rect, name, info, this.faceinfo.icon, ctx)
+        if (this.onlyImg === false)
+          this.drawFaceMarker(rect, img, name, info, this.faceinfo.icon, ctx)
+        else this.drawOnlyImg(rect, img, this.faceinfo.icon, ctx)
       })
       */
     })
     setInterval(() => this.uploadImage(), 5000)
   },
   methods: {
+    profile() {
+      window.location.replace('/profile')
+    },
+    drawOnlyImg: function(rect, img, imagesrc, ctx) {
+      img.crossOrigin = 'Anonymous'
+      img.src = imagesrc
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+      ctx.clearRect(rect.x + 7, rect.y + 7, rect.width - 14, rect.height - 14)
+      ctx.drawImage(
+        img,
+        rect.x,
+        rect.y - rect.height / 3,
+        rect.width,
+        rect.height + rect.height / 3
+      )
+    },
     savePic() {
       var date = new Date()
       var fileName = 'card-' + Math.round(date.getTime() / 1000) + '.png'
@@ -173,10 +206,7 @@ export default {
           }
         })
     },
-    drawFaceMarker: function(rect, name, info, imagesrc, ctx) {
-      let img = new Image()
-      img.crossOrigin = 'Anonymous'
-      img.src = imagesrc
+    drawFaceMarker: function(rect, img, name, info, imagesrc, ctx) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
       ctx.fillRect(
         rect.x,
@@ -200,15 +230,15 @@ export default {
         (rect.width / 3) * 2 - 14
       )
       ctx.clearRect(rect.x + 7, rect.y + 7, rect.width - 14, rect.height - 14)
-      img.onload = () => {
-        ctx.drawImage(
-          img,
-          rect.x + 7,
-          rect.y + 7 - rect.height / 3,
-          rect.height / 3 - 14,
-          rect.height / 3 - 14
-        )
-      }
+      img.crossOrigin = 'Anonymous'
+      img.src = imagesrc
+      ctx.drawImage(
+        img,
+        rect.x + 7,
+        rect.y + 7 - rect.height / 3,
+        rect.height / 3 - 14,
+        rect.height / 3 - 14
+      )
     }
   }
 }
@@ -217,7 +247,6 @@ export default {
 .overlay {
   position: absolute;
   top: 90%;
-  left: 80%;
 }
 video,
 canvas {
