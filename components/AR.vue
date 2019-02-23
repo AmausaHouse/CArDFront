@@ -68,8 +68,7 @@ export default {
       videoHeight: 0,
       faceinfo: {
         name: 'thsis your name',
-        icon:
-          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg',
+        icon: '/static/img/hatena.png',
         info: 'this is your disctiption'
       }
     }
