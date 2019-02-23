@@ -3,12 +3,27 @@
     <video id="video" width="100%" height="100%" preload autoplay loop muted />
     <canvas id="canvas" class="" width="100%" height="100%" />
     <div class="overlay">
-      <b-button variant="primary" @click="modalShow = !modalShow">
-        take a photo
-      </b-button>
+      <b-card class="text-center">
+        <b-button
+          class="mr-1 ml-1"
+          variant="primary"
+          @click="modalShow = !modalShow"
+        >
+          take a photo
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary">
+          アイコンのみ
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary">
+          profile表示
+        </b-button>
+        <b-button class="mr-1 ml-1" variant="primary">
+          プロフィール編集
+        </b-button>
+      </b-card>
     </div>
     <div>
-      <b-modal v-model="modalShow" hide-footer>
+      <b-modal v-model="modalShow" size="lg" hide-footer>
         <div class="d-block text-center">
           <canvas
             id="canvas2"
@@ -207,7 +222,6 @@ export default {
 .overlay {
   position: absolute;
   top: 90%;
-  left: 80%;
 }
 video,
 canvas {
