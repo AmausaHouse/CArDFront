@@ -120,31 +120,35 @@ export default {
     drawFaceMarker: function(rect, name, info, imagesrc, ctx) {
       let img = new Image()
       img.src = imagesrc
-      ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
-      ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
-      ctx.fillRect(rect.x, rect.y - rect.height / 3, rect.width, rect.height)
-      ctx.fillStyle = 'rgba(0, 0, 0, 00.7)'
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+      ctx.fillRect(
+        rect.x,
+        rect.y - rect.height / 3,
+        rect.width,
+        rect.height + rect.height / 3
+      )
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
       ctx.font = (rect.height / 3 / 3) * 2 - 2 + 'px sans-serif'
       ctx.fillText(
         name,
-        rect.x + rect.width / 3 + 10,
+        rect.x + rect.width / 3 + 7,
         rect.y - (rect.height / 6) * 1,
-        (rect.width / 3) * 2 - 10
+        (rect.width / 3) * 2 - 14
       )
       ctx.font = rect.height / 3 / 3 - 2 + 'px sans-serif'
       ctx.fillText(
         info,
-        rect.x + rect.width / 3 + 10,
+        rect.x + rect.width / 3 + 7,
         rect.y,
-        (rect.width / 3) * 2 - 10
+        (rect.width / 3) * 2 - 14
       )
-      ctx.clearRect(rect.x + 10, rect.y + 10, rect.width - 20, rect.height - 20)
+      ctx.clearRect(rect.x + 7, rect.y + 7, rect.width - 14, rect.height - 14)
       ctx.drawImage(
         img,
-        rect.x + 10,
-        rect.y + 10 - rect.height / 3,
-        rect.height / 3 - 10,
-        rect.height / 3 - 10
+        rect.x + 7,
+        rect.y + 7 - rect.height / 3,
+        rect.height / 3 - 14,
+        rect.height / 3 - 14
       )
     }
   }
