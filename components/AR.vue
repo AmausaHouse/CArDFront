@@ -18,6 +18,7 @@
           />
           <img id="data_url_png" :width="width / 3" :height="height / 3" />
         </div>
+        <b-button variant="danger" @click="savePic()">保存</b-button>
       </b-modal>
     </div>
   </section>
@@ -124,7 +125,31 @@ export default {
       })
     })
   },
-  methods: {}
+  methods: {
+    savePic() {
+      var date = new Date()
+      var fileName = 'card-' + Math.round(date.getTime() / 1000) + '.png'
+      var blob = this.base64toBlob(this.imgSrc)
+      this.saveBlob(blob, fileName)
+    },
+    base64toBlob(base64) {
+      var tmp = base64.split(',')
+      var data = atob(tmp[1])
+      var mime = tmp[0].split(':')[1].split(';')[0]
+      var buf = new Uint8Array(data.length)
+      for (var i = 0; i < data.length; i++) {
+        buf[i] = data.charCodeAt(i)
+      }
+      var blob = new Blob([buf], { type: mime })
+      return blob
+    },
+    saveBlob(blob, fileName) {
+      var link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = fileName
+      link.click()
+    }
+  }
 }
 </script>
 <style scoped>
