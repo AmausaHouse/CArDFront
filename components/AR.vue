@@ -138,17 +138,14 @@ export default {
           rect.width - 20,
           rect.height - 20
         )
+        ctx.drawImage(
+          img,
+          rect.x,
+          rect.y - rect.height / 2,
+          rect.width / 2,
+          rect.height / 2
+        )
         img.crossOrigin = 'anonymous'
-        img.onload = () => {
-          img.crossOrigin = 'anonymous'
-          ctx.drawImage(
-            img,
-            rect.x,
-            rect.y - rect.height / 2,
-            rect.width / 2,
-            rect.height / 2
-          )
-        }
       })
     })
     setInterval(() => this.uploadImage(), 5000)
