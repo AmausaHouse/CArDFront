@@ -135,19 +135,17 @@ export default {
             maxrect = rect
           }
         })
-        this.drawFaceMarker(maxrect, name, info, this.faceinfo.icon, ctx)
+        this.draw(maxrect, img, name, info, this.faceinfo.icon, ctx)
       }
-      /*
-      event.data.forEach(rect => {
-        if (this.onlyImg === false)
-          this.drawFaceMarker(rect, img, name, info, this.faceinfo.icon, ctx)
-        else this.drawOnlyImg(rect, img, this.faceinfo.icon, ctx)
-      })
-      */
     })
     setInterval(() => this.uploadImage(), 5000)
   },
   methods: {
+    draw(rect, img, name, info, imagesrc, ctx) {
+      if (this.onlyImg === false)
+        this.drawFaceMarker(rect, img, name, info, imagesrc, ctx)
+      else this.drawOnlyImg(rect, img, imagesrc, ctx)
+    },
     profile() {
       window.location.replace('/profile')
     },
