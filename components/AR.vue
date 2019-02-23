@@ -113,9 +113,20 @@ export default {
       let info = this.faceinfo.info
       img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      if (event.data.length > 0) {
+        let maxrect = { width: 0 }
+        event.data.forEach(rect => {
+          if (rect.width > maxrect.width) {
+            maxrect = rect
+          }
+        })
+        this.drawFaceMarker(maxrect, name, info, this.faceinfo.icon, ctx)
+      }
+      /*
       event.data.forEach(rect => {
         this.drawFaceMarker(rect, name, info, this.faceinfo.icon, ctx)
       })
+      */
     })
     setInterval(() => this.uploadImage(), 5000)
   },
@@ -159,7 +170,6 @@ export default {
             this.faceinfo.name = r.data[0].display_name
             this.faceinfo.icon = r.data[0].user_icon
             this.faceinfo.info = r.data[0].user_dictionaly
-            console.log(this.faceinfo)
           }
         })
     },
