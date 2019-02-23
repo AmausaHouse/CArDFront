@@ -61,7 +61,8 @@ export default {
       faceinfo: {
         name: 'thsis your name',
         icon:
-          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg'
+          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg',
+        info: 'this is your disctiption'
       }
     }
   },
@@ -77,8 +78,6 @@ export default {
     video.height = document.body.clientHeight
     var ctx = canvas.getContext('2d')
     var img = new Image()
-    //img path
-    img.src = 'img/hoge.png'
     var tracker = new tracking.ObjectTracker('face')
     tracker.setInitialScale(4)
     tracker.setStepSize(2)
@@ -86,9 +85,9 @@ export default {
     ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
     ctx.strokeStyle = 'black'
     tracking.track('#video', tracker, { camera: true })
-    let nuxt_self = this.userinfo
     tracker.on('track', event => {
-      var name = this.faceinfo.name
+      let name = this.faceinfo.name
+      let info = this.faceinfo.info
       img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(function(rect) {
@@ -103,7 +102,7 @@ export default {
           rect.height
         )
         ctx.strokeText(
-          'fuga',
+          info,
           rect.x + rect.width / 2,
           rect.y - (rect.height / 2 / 3) * 1,
           rect.width,
@@ -142,6 +141,7 @@ export default {
           if (r.data.length > 0) {
             this.faceinfo.name = r.data[0].display_name
             this.faceinfo.icon = r.data[0].user_icon
+            this.faceinfo.info = r.data[0].user_dictionaly
             console.log(this.faceinfo)
           }
         })
