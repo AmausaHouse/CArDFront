@@ -30,7 +30,7 @@
         <a href="/api/user/login/twitter/">twitterでlogin</a>
         <a href="/api/user/login/github/">githubでlogin</a>
       </div>
-      <b-button class="mt-2 mb-2" variant="success" @click="back">
+      <b-button class="mt-2 mb-2" variant="success" href="/">
         戻る
       </b-button>
     </b-card>
@@ -89,9 +89,6 @@ export default {
           dict: this.user_dict
         })
         .then(r => consolt.log(r))
-    },
-    back() {
-      window.location.replace('/')
     }
   }
 }

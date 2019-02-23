@@ -3,22 +3,26 @@
     <video id="video" width="100%" height="100%" preload autoplay loop muted />
     <canvas id="canvas" class="" width="100%" height="100%" />
     <div class="overlay">
-      <b-card class="text-center">
+      <b-card class="text-center mr-1 ml-1">
         <b-button
           class="mr-1 ml-1"
           variant="primary"
           @click="modalShow = !modalShow"
         >
-          take a photo
+          撮影
         </b-button>
         <b-button class="mr-1 ml-1" variant="primary" @click="onlyImg = true">
-          アイコンのみ
+          アイコン
         </b-button>
         <b-button class="mr-1 ml-1" variant="primary" @click="onlyImg = false">
-          profile表示
+          情報
         </b-button>
-        <b-button class="mr-1 ml-1" variant="primary" @click="profile">
-          プロフィール編集
+        <b-button
+          class="text-center d-block mt-2 mr-5 ml-5"
+          variant="primary"
+          href="/profile"
+        >
+          アカウントの変更
         </b-button>
       </b-card>
     </div>
@@ -33,7 +37,9 @@
           />
           <img id="data_url_png" :width="width / 3" :height="height / 3" />
         </div>
-        <b-button variant="danger" @click="savePic()">保存</b-button>
+        <b-button variant="danger" block class="mt-3" @click="savePic()">
+          保存
+        </b-button>
       </b-modal>
     </div>
     <canvas
@@ -146,9 +152,6 @@ export default {
         this.drawFaceMarker(rect, img, name, info, imagesrc, ctx)
       else this.drawOnlyImg(rect, img, imagesrc, ctx)
     },
-    profile() {
-      window.location.replace('/profile')
-    },
     drawOnlyImg: function(rect, img, imagesrc, ctx) {
       img.crossOrigin = 'Anonymous'
       img.src = imagesrc
@@ -244,7 +247,7 @@ export default {
 <style scoped>
 .overlay {
   position: absolute;
-  top: 90%;
+  top: 86%;
 }
 video,
 canvas {
