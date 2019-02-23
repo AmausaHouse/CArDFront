@@ -68,7 +68,7 @@ export default {
       videoHeight: 0,
       faceinfo: {
         name: 'thsis your name',
-        icon: '/static/img/hatena.png',
+        icon: '/img/hatena.png',
         info: 'this is your disctiption'
       }
     }
@@ -113,38 +113,8 @@ export default {
       let info = this.faceinfo.info
       img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      event.data.forEach(function(rect) {
-        ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
-        ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
-        ctx.font = '30px'
-        ctx.strokeText(
-          name,
-          rect.x + rect.width / 2,
-          rect.y - (rect.height / 2 / 3) * 2,
-          rect.width,
-          rect.height
-        )
-        ctx.strokeText(
-          info,
-          rect.x + rect.width / 2,
-          rect.y - (rect.height / 2 / 3) * 1,
-          rect.width,
-          rect.height
-        )
-        ctx.clearRect(
-          rect.x + 10,
-          rect.y + 10,
-          rect.width - 20,
-          rect.height - 20
-        )
-        ctx.drawImage(
-          img,
-          rect.x,
-          rect.y - rect.height / 2,
-          rect.width / 2,
-          rect.height / 2
-        )
-        img.crossOrigin = 'anonymous'
+      event.data.forEach(rect => {
+        this.drawFaceMarker(rect, name, info, this.faceinfo.icon, ctx)
       })
     })
     setInterval(() => this.uploadImage(), 5000)
@@ -192,6 +162,43 @@ export default {
             console.log(this.faceinfo)
           }
         })
+    },
+    drawFaceMarker: function(rect, name, info, imagesrc, ctx) {
+      let img = new Image()
+      img.crossOrigin = 'Anonymous'
+      img.src = imagesrc
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+      ctx.fillRect(
+        rect.x,
+        rect.y - rect.height / 3,
+        rect.width,
+        rect.height + rect.height / 3
+      )
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
+      ctx.font = (rect.height / 3 / 3) * 2 - 2 + 'px sans-serif'
+      ctx.fillText(
+        name,
+        rect.x + rect.width / 3 + 7,
+        rect.y - (rect.height / 6) * 1,
+        (rect.width / 3) * 2 - 14
+      )
+      ctx.font = rect.height / 3 / 3 - 2 + 'px sans-serif'
+      ctx.fillText(
+        info,
+        rect.x + rect.width / 3 + 7,
+        rect.y,
+        (rect.width / 3) * 2 - 14
+      )
+      ctx.clearRect(rect.x + 7, rect.y + 7, rect.width - 14, rect.height - 14)
+      img.onload = () => {
+        ctx.drawImage(
+          img,
+          rect.x + 7,
+          rect.y + 7 - rect.height / 3,
+          rect.height / 3 - 14,
+          rect.height / 3 - 14
+        )
+      }
     }
   }
 }
