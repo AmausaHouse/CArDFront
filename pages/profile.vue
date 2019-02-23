@@ -1,17 +1,39 @@
 <template>
   <div>
-    <p>{{ user }}</p>
-    <p>表示名{{ display_name }}</p>
-    <p>アイコン画像</p>
-    <img :src="icon_url" />
-    <button @click="logout">logout</button>
-    <button @click="get_icon_from_social">iconを自動取得</button>
-    <input v-model="display_name" />
-    <button @click="update_display_name">表示名を再設定</button>
-    <input v-model="user_dict" />
-    <button @click="update_user_dict">user dictionalyを再設定</button>
-    <a href="/api/user/login/twitter/">twitterでlogin</a>
-    <a href="/api/user/login/github/">githubでlogin</a>
+    <b-card class="m-5">
+      <div v-if="show">
+        <p>ユーザー名 {{ user }}</p>
+        <p>表示名 {{ display_name }}</p>
+        <p>アイコン画像</p>
+        <b-img :src="icon_url" width="100%" height="100%" />
+        <b-button class="d-block mt-2 mb-2" @click="get_icon_from_social">
+          iconを自動取得
+        </b-button>
+        <b-form-input v-model="display_name" />
+        <b-button class="d-block mt-2 mb-2" @click="update_display_name">
+          表示名を再設定
+        </b-button>
+        <b-form-input v-model="user_dict" />
+        <b-button class="mt-2 mb-2" @click="update_user_dict">
+          user dictionalyを再設定
+        </b-button>
+        <b-button
+          variant="danger"
+          class="mt-2 mb-2 float-right"
+          @click="logout"
+        >
+          logout
+        </b-button>
+      </div>
+      <div v-show="!show">
+        <p>ログインしてください</p>
+        <a href="/api/user/login/twitter/">twitterでlogin</a>
+        <a href="/api/user/login/github/">githubでlogin</a>
+      </div>
+      <b-button class="mt-2 mb-2" variant="success" @click="back">
+        戻る
+      </b-button>
+    </b-card>
   </div>
 </template>
 
@@ -25,13 +47,15 @@ export default {
       user: '',
       icon_url: '',
       display_name: '',
-      user_dict: ''
+      user_dict: '',
+      show: false
     }
   },
   mounted: function() {
-    axios
-      .get('http://localhost:8080/api/login')
-      .then(response => (this.user = response.data))
+    axios.get('http://localhost:8080/api/login').then(response => {
+      this.user = response.data
+      this.show = true
+    })
     axios.get('http://localhost:8080/api/profile/').then(response => {
       this.icon_url = response.data.icon
       this.display_name = response.data.name
@@ -50,7 +74,7 @@ export default {
     logout: function() {
       axios
         .delete('http://localhost:8080/api/login')
-        .then(response => alert(response.data))
+        .then(response => location.reload())
     },
     update_display_name: function() {
       axios
@@ -65,6 +89,9 @@ export default {
           dict: this.user_dict
         })
         .then(r => consolt.log(r))
+    },
+    back() {
+      window.location.replace('/')
     }
   }
 }

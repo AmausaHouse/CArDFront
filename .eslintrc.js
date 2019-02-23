@@ -18,8 +18,8 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    "vue/html-self-closing": 0,
     "vue/max-attributes-per-line": "off",
-     "vue/html-self-closing": 0,
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
