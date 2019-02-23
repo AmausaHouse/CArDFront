@@ -127,25 +127,24 @@ export default {
       ctx.font = (rect.height / 3 / 3) * 2 - 2 + 'px sans-serif'
       ctx.fillText(
         name,
-        rect.x + rect.width / 3,
+        rect.x + rect.width / 3 + 10,
         rect.y - (rect.height / 6) * 1,
-        (rect.width / 3) * 2
+        (rect.width / 3) * 2 - 10
       )
       ctx.font = rect.height / 3 / 3 - 2 + 'px sans-serif'
       ctx.fillText(
         info,
-        rect.x + rect.width / 3,
+        rect.x + rect.width / 3 + 10,
         rect.y,
-        (rect.width / 3) * 2,
-        rect.height / 3 / 3 / 2
+        (rect.width / 3) * 2 - 10
       )
       ctx.clearRect(rect.x + 10, rect.y + 10, rect.width - 20, rect.height - 20)
       ctx.drawImage(
         img,
-        rect.x,
-        rect.y - rect.height / 3,
-        rect.width / 3,
-        rect.height / 3
+        rect.x + 10,
+        rect.y + 10 - rect.height / 3,
+        rect.height / 3 - 10,
+        rect.height / 3 - 10
       )
     }
   }
