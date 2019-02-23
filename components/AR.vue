@@ -1,22 +1,26 @@
 <template>
   <section class="container">
-    <video
-      id="video"
-      width="100%"
-      height="100%"
-      preload
-      autoplay
-      loop
-      muted
-      @click="uploadImage"
-    />
-    <canvas
-      id="canvas"
-      class=""
-      width="100%"
-      height="100%"
-      @click="uploadImage"
-    />
+    <video id="video" width="100%" height="100%" preload autoplay loop muted />
+    <canvas id="canvas" class="" width="100%" height="100%" />
+    <div class="overlay">
+      <b-button variant="primary" @click="modalShow = !modalShow">
+        take a photo
+      </b-button>
+    </div>
+    <div>
+      <b-modal v-model="modalShow" hide-footer>
+        <div class="d-block text-center">
+          <canvas
+            id="canvas2"
+            :width="width"
+            :height="height"
+            style="display:none"
+          />
+          <img id="data_url_png" :width="width / 3" :height="height / 3" />
+        </div>
+        <b-button variant="danger" @click="savePic()">保存</b-button>
+      </b-modal>
+    </div>
     <canvas
       id="tempcanvas"
       class=""
@@ -53,20 +57,39 @@ export default {
       */
     ]
   },
-  data: function() {
+  data() {
     return {
+      modalShow: false,
+      width: 0,
+      height: 0,
+      imgSrc: null,
       video: {},
       videoWidth: 0,
       videoHeight: 0,
       faceinfo: {
         name: 'thsis your name',
-        icon:
-          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg',
+        icon: '/static/img/hatena.png',
         info: 'this is your disctiption'
       }
     }
   },
+  watch: {
+    modalShow: function() {
+      if (this.modalShow === true) {
+        video.pause()
+        var canvas2 = document.getElementById('canvas2')
+        canvas2.getContext('2d').drawImage(video, 0, 0, this.width, this.height)
+        canvas2
+          .getContext('2d')
+          .drawImage(canvas, 0, 0, this.width, this.height)
+        this.imgSrc = canvas2.toDataURL()
+        document.getElementById('data_url_png').src = this.imgSrc
+      } else video.play()
+    }
+  },
   mounted() {
+    this.width = document.body.clientWidth
+    this.height = document.body.clientHeight
     var video = document.getElementById('video')
     this.video = video
     var canvas = document.getElementById('canvas')
@@ -121,11 +144,35 @@ export default {
           rect.width / 2,
           rect.height / 2
         )
+        img.crossOrigin = 'anonymous'
       })
     })
     setInterval(() => this.uploadImage(), 5000)
   },
   methods: {
+    savePic() {
+      var date = new Date()
+      var fileName = 'card-' + Math.round(date.getTime() / 1000) + '.png'
+      var blob = this.base64toBlob(this.imgSrc)
+      this.saveBlob(blob, fileName)
+    },
+    base64toBlob(base64) {
+      var tmp = base64.split(',')
+      var data = atob(tmp[1])
+      var mime = tmp[0].split(':')[1].split(';')[0]
+      var buf = new Uint8Array(data.length)
+      for (var i = 0; i < data.length; i++) {
+        buf[i] = data.charCodeAt(i)
+      }
+      var blob = new Blob([buf], { type: mime })
+      return blob
+    },
+    saveBlob(blob, fileName) {
+      var link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = fileName
+      link.click()
+    },
     uploadImage: function() {
       var canvas = document.getElementById('tempcanvas')
       canvas.setAttribute('width', this.videoWidth / 3)
@@ -150,6 +197,11 @@ export default {
 }
 </script>
 <style scoped>
+.overlay {
+  position: absolute;
+  top: 90%;
+  left: 80%;
+}
 video,
 canvas {
   margin-left: 0px;
