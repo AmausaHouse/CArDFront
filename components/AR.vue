@@ -58,7 +58,11 @@ export default {
       video: {},
       videoWidth: 0,
       videoHeight: 0,
-      faceinfo: []
+      faceinfo: {
+        name: 'thsis your name',
+        icon:
+          'https://vignette.wikia.nocookie.net/marsargo/images/5/52/Unknown.jpg'
+      }
     }
   },
   mounted() {
@@ -80,16 +84,19 @@ export default {
     tracker.setStepSize(2)
     tracker.setEdgesDensity(0.1)
     ctx.fillStyle = 'rgba(91, 15, 81, 0.7)'
-    ctx.strokeStyle = 'blue'
+    ctx.strokeStyle = 'black'
     tracking.track('#video', tracker, { camera: true })
-    tracker.on('track', function(event) {
+    let nuxt_self = this.userinfo
+    tracker.on('track', event => {
+      var name = this.faceinfo.name
+      img.src = this.faceinfo.icon
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(function(rect) {
         ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
         ctx.fillRect(rect.x, rect.y - rect.height / 2, rect.width, rect.height)
-        ctx.font = rect.x / 4
+        ctx.font = '30px'
         ctx.strokeText(
-          'name',
+          name,
           rect.x + rect.width / 2,
           rect.y - (rect.height / 2 / 3) * 2,
           rect.width,
@@ -117,25 +124,26 @@ export default {
         )
       })
     })
-    setInterval(() => this.uploadImage(), 20000)
+    setInterval(() => this.uploadImage(), 5000)
   },
   methods: {
     uploadImage: function() {
-      console.log('fnc called')
       var canvas = document.getElementById('tempcanvas')
       canvas.setAttribute('width', this.videoWidth / 3)
       canvas.setAttribute('height', this.videoHeight / 3)
       var ctx = canvas.getContext('2d')
       ctx.drawImage(this.video, 0, 0, this.videoWidth / 3, this.videoHeight / 3)
       var b64Text = canvas.toDataURL()
-      console.log(b64Text)
       axios
-        .post('http://localhost:8080/api/face/', {
+        .post('/api/face/', {
           base64img: b64Text
         })
         .then(r => {
-          console.log('data comming')
-          console.log(r.data)
+          if (r.data.length > 0) {
+            this.faceinfo.name = r.data[0].display_name
+            this.faceinfo.icon = r.data[0].user_icon
+            console.log(this.faceinfo)
+          }
         })
     }
   }
