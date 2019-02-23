@@ -8,7 +8,17 @@
       </b-button>
     </div>
     <div>
-      <b-modal v-model="modalShow" hide-footer>画像</b-modal>
+      <b-modal v-model="modalShow" hide-footer>
+        <div class="d-block text-center">
+          <canvas
+            id="canvas2"
+            :width="width"
+            :height="height"
+            style="display:none"
+          />
+          <img id="data_url_png" :width="width / 3" :height="height / 3" />
+        </div>
+      </b-modal>
     </div>
   </section>
 </template>
@@ -38,16 +48,29 @@ export default {
   },
   data() {
     return {
-      modalShow: false
+      modalShow: false,
+      width: 0,
+      height: 0,
+      imgSrc: null
     }
   },
   watch: {
     modalShow: function() {
-      if (this.modalShow === true) video.pause()
-      else video.play()
+      if (this.modalShow === true) {
+        video.pause()
+        var canvas2 = document.getElementById('canvas2')
+        canvas2.getContext('2d').drawImage(video, 0, 0, this.width, this.height)
+        canvas2
+          .getContext('2d')
+          .drawImage(canvas, 0, 0, this.width, this.height)
+        this.imgSrc = canvas2.toDataURL()
+        document.getElementById('data_url_png').src = this.imgSrc
+      } else video.play()
     }
   },
   mounted() {
+    this.width = document.body.clientWidth
+    this.height = document.body.clientHeight
     var video = document.getElementById('video')
     var canvas = document.getElementById('canvas')
     canvas.width = document.body.clientWidth
