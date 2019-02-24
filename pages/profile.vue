@@ -52,11 +52,11 @@ export default {
     }
   },
   mounted: function() {
-    axios.get('http://localhost:8080/api/login').then(response => {
+    axios.get('https://c-ar-d.app/api/login').then(response => {
       this.user = response.data
       this.show = true
     })
-    axios.get('http://localhost:8080/api/profile/').then(response => {
+    axios.get('https://c-ar-d.app/api/profile/').then(response => {
       this.icon_url = response.data.icon
       this.display_name = response.data.name
       this.user_dict = response.data.dict
@@ -65,27 +65,27 @@ export default {
   methods: {
     get_icon_from_social: function() {
       axios
-        .post('http://localhost:8080/api/profile/?req_type=icon')
+        .post('https://c-ar-d.app/api/profile/?req_type=icon')
         .then(r => consolt.log(r))
       axios
-        .get('http://localhost:8080/api/profile/')
+        .get('https://c-ar-d.app/api/profile/')
         .then(response => (this.icon_url = response.data))
     },
     logout: function() {
       axios
-        .delete('http://localhost:8080/api/login')
+        .delete('https://c-ar-d.app/api/login')
         .then(response => location.reload())
     },
     update_display_name: function() {
       axios
-        .post('http://localhost:8080/api/profile/?req_type=name', {
+        .post('https://c-ar-d.app/api/profile/?req_type=name', {
           name: this.display_name
         })
         .then(r => consolt.log(r))
     },
     update_user_dict: function() {
       axios
-        .post('http://localhost:8080/api/profile/?req_type=dict', {
+        .post('https://c-ar-d.app/api/profile/?req_type=dict', {
           dict: this.user_dict
         })
         .then(r => consolt.log(r))
