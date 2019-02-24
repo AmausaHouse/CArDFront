@@ -37,7 +37,7 @@
           />
           <img id="data_url_png" :width="width / 3" :height="height / 3" />
         </div>
-        <b-button variant="danger" block class="mt-3" @click="savePic()">
+        <b-button variant="danger" size="lg" class="mt-3" @click="savePic()">
           保存
         </b-button>
       </b-modal>
@@ -110,10 +110,16 @@ export default {
     }
   },
   mounted() {
-    this.width = document.body.clientWidth
-    this.height = document.body.clientHeight
     var video = document.getElementById('video')
     this.video = video
+    var intervalId = setInterval(() => {
+      if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+        this.width = video.videoWidth
+        this.height = video.videoHeight
+        clearInterval(intervalId)
+      }
+    }, 500)
+    video.load()
     var canvas = document.getElementById('canvas')
     this.videoWidth = document.body.clientWidth
     this.videoHeight = document.body.clientHeight
