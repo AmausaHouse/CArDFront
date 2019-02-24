@@ -82,9 +82,9 @@ export default {
       videoWidth: 0,
       videoHeight: 0,
       faceinfo: {
-        name: 'this is your name',
+        name: 'name-detecting',
         icon: 'img/hatena.png',
-        info: 'this is your disctiption'
+        info: ' '
       },
       onlyImg: false
     }
